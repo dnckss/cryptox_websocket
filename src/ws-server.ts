@@ -174,6 +174,29 @@ class CoinPriceWebSocketServer {
   }
 
   /**
+   * 특정 코인의 가격 업데이트를 브로드캐스트 (외부에서 호출 가능)
+   */
+  broadcastPriceUpdate(coinData: {
+    coinId: string
+    symbol: string
+    price: number
+    change1h: number
+    change24h: number
+    change1w: number
+    marketCap: number
+    volume24h: number
+  }) {
+    // 마지막 가격 업데이트
+    this.lastPrices.set(coinData.coinId, coinData.price)
+
+    // 브로드캐스트
+    this.broadcast({
+      type: "update",
+      data: [coinData],
+    })
+  }
+
+  /**
    * WebSocket 서버 종료
    */
   stop() {
